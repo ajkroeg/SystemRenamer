@@ -1,5 +1,5 @@
-﻿using Harmony;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Newtonsoft.Json;
 using BattleTech.UI;
@@ -23,15 +23,18 @@ namespace SystemRenamer
             {
                 ModInit.Settings = new SystemRenamerSettings();
             }
-            var harmony = HarmonyInstance.Create(HarmonyPackage);
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+//            var harmony = HarmonyInstance.Create(HarmonyPackage);
+//            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), HarmonyPackage);
         }
 
     }
     public class SystemRenamerSettings
     {
-        public string TriggerTag1 = "Pirate_Lord";
-        public string TargetSystemName = "Rezak's Hole";
+        public Dictionary<string, SystemRenamer.RenamerConfig> RenamerConfigs =
+            new Dictionary<string, SystemRenamer.RenamerConfig>(); //key is trigger key ID. Renamer Names should parse like normal simgametext?
+        //public string TriggerTag1 = "Pirate_Lord";
+        //public string TargetSystemName = "Rezak's Hole";
 
     }
 }
