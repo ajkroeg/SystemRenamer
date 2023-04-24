@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Newtonsoft.Json;
-using BattleTech.UI;
-using BattleTech;
-using System.Diagnostics.Eventing.Reader;
 
 namespace SystemRenamer
 {

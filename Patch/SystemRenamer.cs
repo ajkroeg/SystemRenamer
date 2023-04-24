@@ -1,16 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using BattleTech;
-using HBS;
-using HBS.Collections;
-using BattleTech.Save;
-using Org.BouncyCastle.Security;
-using BattleTech.Common;
-using BattleTech.Serialization;
 using BattleTech.StringInterpolation;
-using static Org.BouncyCastle.Crypto.Modes.EaxBlockCipher;
 
 namespace SystemRenamer
 {
@@ -29,16 +20,15 @@ namespace SystemRenamer
             {
                 var sim = UnityGameInstance.BattleTechGame.Simulation;
                 if (sim == null) return;
-                if (result.Scope == EventScope.Company)
+                if (result?.AddedTags == null) return;
+                if (result.Scope != EventScope.Company) return;
+                foreach (var tag in result.AddedTags)
                 {
-                    foreach (var tag in result.AddedTags)
+                    if (ModInit.Settings.RenamerConfigs.TryGetValue(tag, out var config))
                     {
-                        if (ModInit.Settings.RenamerConfigs.TryGetValue(tag, out var config))
-                        {
-                            StarSystem modSystem = sim.StarSystems.Find(starSystem => starSystem.Def.CoreSystemID == config.TargetSystem);
-                            var parsedText = Interpolator.Interpolate(config.RenamerName, sim.Context, true);
-                            modSystem.Name = parsedText;
-                        }
+                        StarSystem modSystem = sim.StarSystems.Find(starSystem => starSystem.Def.CoreSystemID == config.TargetSystem);
+                        var parsedText = Interpolator.Interpolate(config.RenamerName, sim.Context, true);
+                        modSystem.Name = parsedText;
                     }
                 }
             }
